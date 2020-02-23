@@ -4,6 +4,8 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.dcrissman.axonplayground.command.CreateAccountCommand;
@@ -15,9 +17,13 @@ import com.dcrissman.axonplayground.model.MoneyDebitDTO;
 
 @Service
 public class AccountCommandService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountCommandService.class);
+
     private final CommandGateway commandGateway;
 
     public AccountCommandService(CommandGateway commandGateway) {
+        LOGGER.info("init AccountCommandService");
         this.commandGateway = commandGateway;
     }
 

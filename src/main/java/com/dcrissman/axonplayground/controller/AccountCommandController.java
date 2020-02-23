@@ -2,6 +2,8 @@ package com.dcrissman.axonplayground.controller;
 
 import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,9 +23,12 @@ import io.swagger.annotations.Api;
 @Api(value = "Account Commands", description = "Account Commands Related Endpoints", tags = "Account Commands")
 public class AccountCommandController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountCommandController.class);
+
     private final AccountCommandService accountCommandService;
 
     public AccountCommandController(AccountCommandService accountCommandService) {
+        LOGGER.info("init AccountCommandController");
         this.accountCommandService = accountCommandService;
     }
 
@@ -39,7 +44,6 @@ public class AccountCommandController {
     }
 
     @PutMapping(value = "/debits/{accountNumber}")
-
     public CompletableFuture<String> debitMoneyFromAccount(@PathVariable(value = "accountNumber") String accountNumber, @RequestBody MoneyDebitDTO moneyDebitDTO) {
         return accountCommandService.debitMoneyFromAccount(accountNumber,
                 moneyDebitDTO);

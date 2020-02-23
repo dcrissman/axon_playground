@@ -5,6 +5,8 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dcrissman.axonplayground.Status;
 import com.dcrissman.axonplayground.command.CreateAccountCommand;
@@ -15,20 +17,26 @@ import com.dcrissman.axonplayground.event.AccountCreatedEvent;
 import com.dcrissman.axonplayground.event.AccountHeldEvent;
 import com.dcrissman.axonplayground.event.MoneyCreditedEvent;
 import com.dcrissman.axonplayground.event.MoneyDebitedEvent;
+import com.dcrissman.axonplayground.service.AccountQueryService;
 
 @Aggregate
 public class AccountAggregate {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountAggregate.class);
+    
     @AggregateIdentifier
     private String id;
     private double accountBalance;
     private String currency;
     private String status;
 
-    public AccountAggregate() {}
+    public AccountAggregate() {
+        LOGGER.info("init AccountAggregate");
+    }
 
     @CommandHandler
     public AccountAggregate(CreateAccountCommand createAccountCommand) {
+        this();
         AggregateLifecycle.apply(
                 new AccountCreatedEvent(createAccountCommand.id, createAccountCommand.accountBalance, createAccountCommand.currency));
     }
