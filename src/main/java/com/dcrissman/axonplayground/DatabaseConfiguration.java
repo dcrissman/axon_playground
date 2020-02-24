@@ -21,7 +21,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = DatabaseConfiguration.PACKAGE_TO_SCAN_PATH,
+        basePackages = DatabaseConfiguration.PACKAGE_TO_SCAN,
         entityManagerFactoryRef = DatabaseConfiguration.ENTITY_MANAGER,
         transactionManagerRef = DatabaseConfiguration.TRANSACTION_MANAGER
         )
@@ -32,7 +32,7 @@ public class DatabaseConfiguration {
     public static final String TRANSACTION_MANAGER = "transactionManager";
     public static final String TRANSACTION_TEMPLATE = "transactionTemplate";
 
-    public static final String PACKAGE_TO_SCAN_PATH = "com.dcrissman.axonplayground.model";
+    public static final String PACKAGE_TO_SCAN = "org.axonframework.eventsourcing.eventstore.jpa";
 
     @Bean(name = DATASOURCE)
     @ConfigurationProperties("datasource")
@@ -51,7 +51,7 @@ public class DatabaseConfiguration {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(datasource);
         em.setPackagesToScan(
-                new String[]{PACKAGE_TO_SCAN_PATH});
+                new String[]{PACKAGE_TO_SCAN});
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(generateDdl);

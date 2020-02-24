@@ -19,6 +19,12 @@
             <groupId>org.axonframework</groupId>
             <artifactId>axon-spring-boot-starter</artifactId>
             <version>4.3</version>
+            <exclusions>
+                <exclusion> <!-- Must be excluded in order to use embedded axon -->
+                    <groupId>org.axonframework</groupId>
+                    <artifactId>axon-server-connector</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
