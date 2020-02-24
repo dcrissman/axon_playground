@@ -1,5 +1,7 @@
 package com.dcrissman.axonplayground;
 
+import java.util.HashMap;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,6 +20,11 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
@@ -34,6 +41,32 @@ public class DatabaseConfiguration {
 
     public static final String PACKAGE_TO_SCAN = "org.axonframework.eventsourcing.eventstore.jpa";
 
+    private static LocalContainerEntityManagerFactoryBean createEntityManager(
+            DataSource datasource,
+            DataSourceOptions options,
+            String[] packagesToScan) {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(datasource);
+        em.setPackagesToScan(packagesToScan);
+
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        vendorAdapter.setGenerateDdl(options.isGenerateDdl());
+        vendorAdapter.setShowSql(options.isShowSql());
+        vendorAdapter.setDatabase(options.getDialect());
+        em.setJpaVendorAdapter(vendorAdapter);
+
+        HashMap<String, Object> properties = new HashMap<>();
+        if (null != options.getHbm2ddl()) {
+            properties.put("hibernate.hbm2ddl.auto", options.getHbm2ddl());
+        }
+
+        if (!properties.isEmpty()) {
+            em.setJpaPropertyMap(properties);
+        }
+
+        return em;
+    }
+
     @Bean(name = DATASOURCE)
     @ConfigurationProperties("datasource")
     @Primary
@@ -48,18 +81,7 @@ public class DatabaseConfiguration {
             @Value("${datasource.generateDdl:false}") boolean generateDdl,
             @Value("${datasource.showSql:false}") boolean showSql,
             @Value("${datasource.dialect}") Database dialect) {
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(datasource);
-        em.setPackagesToScan(
-                new String[]{PACKAGE_TO_SCAN});
-
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setGenerateDdl(generateDdl);
-        vendorAdapter.setShowSql(showSql);
-        vendorAdapter.setDatabase(dialect);
-        em.setJpaVendorAdapter(vendorAdapter);
-
-        return em;
+        return createEntityManager(datasource, new DataSourceOptions(generateDdl, showSql, dialect, "create-drop"), new String[] {PACKAGE_TO_SCAN});
     }
 
     @Bean(TRANSACTION_MANAGER)
@@ -76,6 +98,17 @@ public class DatabaseConfiguration {
     public TransactionTemplate transactionTemplateTabbyCatApps(
             @Qualifier(TRANSACTION_MANAGER) PlatformTransactionManager transactionManager) {
         return new TransactionTemplate(transactionManager);
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DataSourceOptions {
+        private boolean generateDdl;
+        private boolean showSql;
+        private Database dialect;
+        private String hbm2ddl;
     }
 
 }
