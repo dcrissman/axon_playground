@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dcrissman.axonplayground.model.AccountCreateDTO;
-import com.dcrissman.axonplayground.model.MoneyCreditDTO;
-import com.dcrissman.axonplayground.model.MoneyDebitDTO;
+import com.dcrissman.axonplayground.dto.AccountCreateDTO;
+import com.dcrissman.axonplayground.dto.MoneyCreditDTO;
+import com.dcrissman.axonplayground.dto.MoneyDebitDTO;
 import com.dcrissman.axonplayground.service.AccountCommandService;
 
 import io.swagger.annotations.Api;

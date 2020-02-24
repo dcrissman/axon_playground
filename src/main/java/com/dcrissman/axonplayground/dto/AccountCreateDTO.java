@@ -1,4 +1,4 @@
-package com.dcrissman.axonplayground.model;
+package com.dcrissman.axonplayground.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import com.dcrissman.axonplayground.command.CreateAccountCommand;
 import com.dcrissman.axonplayground.command.CreditMoneyCommand;
 import com.dcrissman.axonplayground.command.DebitMoneyCommand;
-import com.dcrissman.axonplayground.model.AccountCreateDTO;
-import com.dcrissman.axonplayground.model.MoneyCreditDTO;
-import com.dcrissman.axonplayground.model.MoneyDebitDTO;
+import com.dcrissman.axonplayground.dto.AccountCreateDTO;
+import com.dcrissman.axonplayground.dto.MoneyCreditDTO;
+import com.dcrissman.axonplayground.dto.MoneyDebitDTO;
 
 @Service
 public class AccountCommandService {
